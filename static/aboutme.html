@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>
+    <style>
+        @font-face {
+            font-family: 'PressStart2P';
+            src: url('https://fonts.cdnfonts.com/s/14027/PressStart2P-Regular.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+        /* Setting up a retro-themed color palette and typography */
+        html, body {
+            background-color: #2e0329;
+            color: #f8e8c1;
+            font-family: 'PressStart2P', monospace;
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            padding: 20px;
+            text-align: center;
+        }
+        .title {
+            font-size: 5rem;
+            text-shadow: 3px 3px 0px #000, 6px 6px 0px #810f2b, 9px 9px 0px #420d1e;
+        }
+        .subheader {
+            font-size: 3rem;
+            margin: 20px 0;
+        }
+        .subsubheader {
+            font-size: 1.5rem;
+            margin: 20px 0;
+        }
+        .photos {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 items per row */
+            gap: 30px; /* Default spacing for all items */
+            margin: 20px;
+            justify-items: center;
+        }
+
+        /* Default photo container styles */
+        .photo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 200px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* Horizontal media-specific spacing and size */
+        .photo-container.horizontal {
+            margin-bottom: 50px; /* Add extra vertical space */
+        }
+
+        .photo-container.horizontal img,
+        .photo-container.horizontal video {
+            max-width: 400px; /* Increased width for horizontal media */
+            max-height: 250px; /* Adjusted height to maintain aspect ratio */
+            object-fit: cover;
+        }
+
+        /* Media styles */
+        .photo-container img,
+        .photo-container video {
+            width: 100%;
+            height: auto;
+            max-width: 300px;
+            max-height: 300px;
+            object-fit: cover;
+            border: 5px solid #810f2b;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* Hover effects */
+        .photo-container:hover {
+            transform: scale(1.1);
+            z-index: 10; /* Ensure hovered item is on top */
+        }
+
+        .photo-description {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            text-align: center;
+            color: #f8e8c1;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .photo-container:hover .photo-description {
+            opacity: 1;
+        }
+        .scroll-notice {
+            position: absolute;
+            top: 45%;
+            left: calc(100% + 80px);
+            transform: translateY(-50%);
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f8e8c1;
+            text-shadow: 0 0 10px #fff, 0 0 20px #f0e68c, 0 0 30px #ffa500, 0 0 40px #ff4500;
+            animation: glow 1.5s infinite alternate;
+            text-align: center;
+            line-height: 2.5rem;
+        }
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 10px #fff, 0 0 20px #f0e68c, 0 0 30px #ffa500, 0 0 40px #ff4500;
+            }
+            100% {
+                text-shadow: 0 0 20px #fff, 0 0 30px #ffa500, 0 0 40px #ff4500, 0 0 50px #ff6347;
+            }
+        }
+        .about-me-section {
+            max-width: 800px;
+            margin: 10px auto;
+            text-align: justify;
+            line-height: 1.6;
+            font-size: 1rem;
+            color: #f8e8c1;
+            text-indent: 2em;
+        }
+        .about-me-highlight {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+        /* Lightbox container (hidden by default) */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8); /* Dim background */
+            display: none; /* Hidden initially */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it's on top of other elements */
+        }
+
+        /* Lightbox media */
+        .lightbox img,
+        .lightbox video {
+            max-width: 90%;
+            max-height: 90%;
+            border: 5px solid #810f2b;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Close button */
+        .lightbox .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: #f8e8c1;
+            cursor: pointer;
+            background: none;
+            border: none;
+            outline: none;
+            font-family: 'PressStart2P', monospace;
+            transition: color 0.2s ease;
+        }
+
+        .lightbox .close-btn:hover {
+            color: #ff6347;
+        }
+        .custom-line {
+            border: none; /* Remove default styling */
+            height: 5px; /* Line thickness */
+            background-color: #0294b4; /* Line color */
+            width: 100%; /* Line width */
+            margin: 20px auto; /* Spacing around the line */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">About Me</div>
+    </div>
+
+    <div class="photos">
+        <div class="photo-container">
+            <img src="images/photo1.png" alt="Photo 1">
+            <div class="photo-description">
+                A friend of mine took this photo of me as I was adjusting my sunglasses. It was outside a Panera in Canton, Massachusetts which was then followed up by some Top Golf!
+            </div>
+        </div>
+        <div class="photo-container">
+            <img src="images/photo2.png" alt="Photo 2">
+            <div class="photo-description">
+                My roommate from sophomore year of college (Sebastian) and I asked someone to take this photo of us during a New York Knicks game and it was awesome.
+            </div>
+        </div>
+        <div class="photo-container">
+            <img src="images/photo3.png" alt="Photo 3">
+            <div class="photo-description">
+                I took this photo in New York's Brooklyn Diner in Manhattan. If I am being real, I really liked the lighting here.
+            </div>
+        </div>
+        <div class="photo-container">
+            <img src="images/photo4.png" alt="Photo 4">
+            <div class="photo-description">
+                This photo was taken outside a lighthouse after a long beach day with some of my friends. It was in Cape Cod and I thought the water and the clouds looked amazing.
+            </div>
+        </div>
+    </div>
+
+    <div class="scroll-notice">
+        SCROLL DOWN<br>TO LEARN MORE<br>ABOUT ME
+    </div>
+
+    <div class="about-me-section">
+        <p>
+            Hi! My name is Arman and I am currently pursuing a Bachelor's degree in Computer Science with a minor in Data Science at Worcester Polytechnic Institute (WPI). My academic journey has provided me with a strong foundation in key areas like Algorithms, Operating Systems, Machine Learning, and Data Science.
+            I have developed proficiency in various programming languages such as C++, Python, Rust, HTML, Javascript, CSS, and SQL, as well as platforms like AWS and Azure, and I have done extensive work with HTML, CSS, Javascript, and Docker. My interest in technology extends beyond the classroom, where I have conducted research on the ethical 
+            implications of Virtual Reality (VR) and Artificial Intelligence (AI), specifically in translation tools. Through this research, I explored issues like dissociation in virtual environments and potential inaccuracies in AI-driven translations, advocating for the ethical design of such technologies.
+        </p>
+        <p>
+            I have also had the opportunity to gain practical experience through multiple internships and roles. As a Claims and IT Intern at The Black Car Fund, I worked on securing the company’s computer network, managing databases using tools like SQL, GCP, and Apache Spark, and processing insurance claims. These 
+            experiences strengthened my ability to handle complex technical and administrative tasks. At WPI’s Exam Proctoring Center, I managed a large database of exam information, coordinated with professors, and organized schedules, ensuring smooth academic operations. Additionally, I had the chance to combine my 
+            passion for sports and technology by programming a tournament database for Spartak Sports Club while training judokas in martial arts techniques.
+        </p>
+        <p>
+            Beyond my technical roles, I have taken on leadership responsibilities that have helped me grow both personally and professionally. As the Assistant Risk Manager for Theta Chi fraternity, I was responsible for identifying and mitigating risks to ensure the safety and financial success of the organization. 
+            My time as a captain for the Islas Malvinas Internacional soccer team further developed my leadership skills, where I designed training drills and collaborated with coaches on player development. I believe that these diverse experiences—ranging from technical roles to leadership positions—have equipped me 
+            with the skills to succeed in a variety of environments, and I am always eager to take on new challenges for the betterment of myself and the people around me.
+        </p>
+        <p class="about-me-highlight">
+            Below, you will learn a little more about me!
+            <hr class="custom-line">
+        </p>
+    </div>
+</body>
+</html>
+
+<body>
+    <div class="header">
+        <div class="subheader">My Life</div>
+    <div class="header">
+        <div class="subsubheader">Click on the media below for a closer look!</div>
+    </div>
+    <div class="photos">
+        <div class="photo-container">
+            <img src="images/brother.png" alt="Brother">
+            <div class="photo-description">My father took this picture of my younger brother (Artur), and I</div>
+        </div>
+        <div class="photo-container horizontal">
+            <img src="images/mother.jpg" alt="Mother">
+            <div class="photo-description">A picture of my mother, brother, and myself</div>
+        </div>
+        <div class="photo-container horizontal">
+            <img src="images/kindergarden.jpg" alt="Kindergarten">
+            <div class="photo-description">This is a picture of my kindergarden graduation when I attended an Armenian school. I was one of five students!</div>
+        </div>
+        <div class="photo-container horizontal">
+            <img src="images/prebaptism.jpg" alt="Prebaptism">
+            <div class="photo-description">Artur, Gorik, Arman, Gagik, and Erik (Gorik, Gagik, and Erik are my cousins)</div>
+        </div>
+
+
+        <div class="photo-container horizontal">
+            <img src="images/baptism.png" alt="Baptism">
+            <div class="photo-description">
+                This photo was taken during me and my brother's baptism. My cousin Erik became our Godfather. 
+            </div>
+        </div>
+        <div class="photo-container">
+            <video controls>
+                <source src="videos/swim.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="photo-description">Me attempting to swim the butterfly stroke at 12 years old.</div>
+        </div>
+        <div class="photo-container">
+            <img src="images/slide.jpg" alt="Slide">
+            <div class="photo-description">A cool capture of me going down a very steep and scary water slide in Yerevan, Armenia</div>
+        </div>
+        <div class="photo-container horizontal">
+            <video controls>
+                <source src="videos/soccer.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="photo-description">I scored this goal when I played for Islas Malvinas FC at 13 years old. I was very proud of this. </div>
+        </div>
+        <div class="photo-container">
+            <video controls>
+                <source src="videos/armwrestle.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="photo-description">
+                Arm-wrestling my dad and losing...
+            </div>
+        </div>
+        <div class="photo-container horizontal">
+            <video controls>
+                <source src="videos/fort.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="photo-description">Back when I used to grind fortnite (I still do).</div>
+        </div>
+
+
+        <div class="photo-container">
+            <video controls>
+                <source src="videos/fifa.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="photo-description">One of the best Fifa goals I have ever scored.</div>
+        </div>
+        <div class="photo-container">
+            <video controls>
+                <source src="videos/wpi.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="photo-description">A video I took of the WPI campus during the fall. It was so beautiful.</div>
+        </div>
+        <div class="photo-container horizontal">
+            <img src="images/paintball.jpg" alt="Paintball">
+            <div class="photo-description">Post-paintball day with my fraternity brothers.</div>
+        </div>
+        <div class="photo-container">
+            <img src="images/Golf.png" alt="Golf">
+            <div class="photo-description">My first time playing Golf in the range.</div>
+        </div>
+
+
+        <div class="photo-container">
+            <video controls>
+                <source src="videos/cliffdive.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="photo-description">My first time going cliff diving with some of my friends.</div>
+        </div>
+        <div class="photo-container">
+            <img src="images/cliffpic.jpg" alt="Cliffpic">
+            <div class="photo-description">Post-dive picture!</div>
+        </div>
+        <div class="photo-container">
+            <img src="images/fraternity.jpg" alt="Fraternity">
+            <div class="photo-description">This was my first ever formal with my fraternity (Theta Chi Epsilon). The people in the photo are the brothers in my graduating class!</div>
+        </div>
+        <div class="photo-container">
+            <img src="images/nyc.jpg" alt="NYC">
+            <div class="photo-description">Took this photo in NYC (where I am from) and I thought it was really aesthetic, haha.</div>
+        </div>
+
+        <div class="photo-container horizontal">
+            <video controls>
+                <source src="videos/275.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="photo-description">This was my first time incline-bench pressing 275 pounds and it was a big accomplishment for me.</div>
+        </div>
+        <div class="photo-container horizontal">
+            <video controls>
+                <source src="videos/benchpr.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="photo-description">This was my official bench pressing personal record. I hit 345 pounds at a body weight of 163 pounds!</div>
+        </div>
+        <div class="photo-container horizontal">
+            <img src="images/hottub.jpg" alt="Hottub">
+            <div class="photo-description">Relaxing in a hottub with Sebastian (who was mentioned earlier) in the Cape.</div>
+        </div>
+        <div class="photo-container horizontal">
+            <video controls>
+                <source src="videos/rascals.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="photo-description">This was my first ever time line dancing and it was very very very difficult.</div>
+        </div>
+        <div class="photo-container horizontal">
+            <img src="images/steak.jpg" alt="STEAK">
+            <div class="photo-description">For the record, I love cooking, and this was one of the best steaks I ever cooked. It was a pan-seared medium rare butter based steak with rosemary leaves and garlic on top!</div>
+        </div>
+    </div>
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="close-btn" id="close-btn">X</button>
+        <img id="lightbox-img" src="" alt="Expanded View">
+        <video id="lightbox-video" controls>
+            <source id="lightbox-video-src" src="" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <script>
+        // Select lightbox elements
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxVideo = document.getElementById('lightbox-video');
+        const lightboxVideoSrc = document.getElementById('lightbox-video-src');
+        const closeBtn = document.getElementById('close-btn');
+        
+        // Add event listeners to all images and videos
+        document.querySelectorAll('.photo-container img, .photo-container video').forEach(media => {
+            media.addEventListener('click', (e) => {
+                lightbox.style.display = 'flex'; // Show lightbox
+                if (e.target.tagName === 'IMG') {
+                    lightboxImg.src = e.target.src;
+                    lightboxImg.style.display = 'block';
+                    lightboxVideo.style.display = 'none';
+                } else if (e.target.tagName === 'VIDEO') {
+                    lightboxVideoSrc.src = e.target.querySelector('source').src;
+                    lightboxVideo.load(); // Load the video source
+                    lightboxImg.style.display = 'none';
+                    lightboxVideo.style.display = 'block';
+                }
+            });
+        });
+        
+        // Close the lightbox when clicking the close button
+        closeBtn.addEventListener('click', () => {
+            lightbox.style.display = 'none';
+            lightboxImg.src = '';
+            lightboxVideoSrc.src = '';
+            lightboxVideo.pause(); // Pause video if playing
+        });
+        
+        // Optional: Close the lightbox when clicking outside the media
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.style.display = 'none';
+                lightboxImg.src = '';
+                lightboxVideoSrc.src = '';
+                lightboxVideo.pause();
+            }
+        });
+    </script>    
+</body>

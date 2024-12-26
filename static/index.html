@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arman's Custom Web</title>
+    <style>
+        @font-face {
+            font-family: 'PressStart2P';
+            src: url('https://fonts.cdnfonts.com/s/14027/PressStart2P-Regular.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+        html {
+            overflow-y: scroll; 
+        }
+        html, body {
+            background-color: #2e0329;
+            color: #f8e8c1;
+            font-family: 'PressStart2P', monospace;
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .terminal {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #2e0329;
+            position: relative;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .title {
+            font-size: 10rem;
+            color: #f8e8c1;
+            text-shadow: 
+                3px 3px 0px #000, 
+                6px 6px 0px #810f2b, 
+                9px 9px 0px #420d1e;
+            margin-bottom: 2px;
+        }
+        .version {
+            font-size: 1.1rem;
+            color: #f8e8c1;
+            margin-left: 10px;
+        }
+        .ascii-art {
+            font-size: 0.6rem;
+            line-height: 1;
+            white-space: pre;
+            position: absolute;
+            top: 0;
+            right: 0;
+            text-align: right;
+            padding: 10px;
+        }
+        .terminal p, .terminal .input-line {
+            margin: 0;
+            line-height: 1.5;
+        }
+        .spaced-line {
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        .highlighted-help {
+            color: #ff629a;
+            font-weight: bold;
+        }
+        .highlight2 {
+            color: #be0bb2;
+            font-weight: bold;
+        }
+        .input-line {
+            display: flex;
+            align-items: center;
+        }
+        .input-prefix {
+            color: cyan;
+            margin-right: 10px;
+        }
+        .input-field {
+            flex: 1;
+            background-color: #2e0329;
+            color: #f8e8c1;
+            border: none;
+            outline: none;
+            font-family: 'PressStart2P', monospace;
+            font-size: 1rem;
+        }
+        .repeated-command {
+            font-family: 'PressStart2P', monospace;
+            font-size: 1rem;
+            color: #f8e8c1;
+            margin: 0;
+            line-height: 1.5;
+        }
+        .help-link {
+            color: #ff9eb3;
+            font-style: italic;
+            text-decoration: none;
+            display: block;
+            margin-top: 5px;
+            transition: color 0.3s ease;
+        }
+        .help-link:hover {
+            color: #ffc0cb;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal" id="terminal">
+        <div class="header">
+            <div>
+                <span class="title">ARMAN</span>
+                <span class="version">[Version 10.0.051604]</span>
+            </div>
+            <div class="ascii-art" id="ascii-art">
+                ,- - -, - - -,- - ,- - -,----,----,----,----,----,----,----,------,------, <br>
+                | 1  |  2  |  3  |  4  |  5  |  6 |  7  |  8  |  9  |  0  | [  |  ] | <- | <br>
+                |- - -, - - -,- - ,- - -,----,----,----,----,----,----,----,------,------| <br>
+                | " |  ,  |  .  |  P  |  Y  |  F  |  G  |  C  |  R  |  L  |  /  | = |  \ | <br>
+                |- - -, - - -,- - ,- - -,----,----,----,----,----,----,----,------,------| <br>
+                | Caps |  T  |  H  |  I  |  S  |  I  |  S  |  C  |  O  |  O  | L | Enter | <br>
+                |- - -, - - -,- - ,- - -,----,----,----,----,----,----,----,------,------| <br>
+                | shift |  ;  |  Q  |  J  |  K  |  X  |  B  |  M  |  W  |  V  |  Z |Shift| <br>
+                |- - -, - - -,- - ,- - -,----,----,----,----,----,----,----,------,------| <br>
+                |  ctrl  |  |  alt  |             space              |  alt  |  |  ctrl  | <br>
+                '- - -, - - -,- - ,- - -,----,----,----,----,----,----,----,------,------| <br>
+            </div>
+        </div>
+    </div>
+    <script>
+        const terminal = document.getElementById("terminal");
+        const asciiArt = document.getElementById("ascii-art").outerHTML;
+
+        const initialContent = `
+            <p>Welcome to my custom terminal website!</p>
+            <p>All the source code can be found on my project's GitHub repo.</p>
+            <p class="spaced-line">Type '<span class="highlighted-help">help</span>' to see the list of available commands.</p>
+        `;
+
+        let isFirstLine = true;
+
+        // Initialize the terminal with the header and introductory content
+        function initializeTerminal() {
+            terminal.innerHTML = `
+                <div class="header">
+                    <div>
+                        <span class="title">ARMAN</span>
+                        <span class="version">[Version 10.0.051604]</span>
+                    </div>
+                    ${asciiArt}
+                </div>
+            `;
+            terminal.innerHTML += initialContent;
+            addInputLine();
+        }
+
+        function typeOutText(element, text, speed, callback) {
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else if (callback) {
+                    callback(); // Trigger the callback if provided
+                }
+            }
+            type();
+        }
+
+        // Add a new input line for user commands
+        function addInputLine() {
+            const inputLine = document.createElement("div");
+            inputLine.classList.add("input-line");
+
+            const prefix = document.createElement("span");
+            prefix.classList.add("input-prefix");
+
+            const input = document.createElement("input");
+            input.classList.add("input-field");
+            input.autocomplete = "off";
+            input.addEventListener("keydown", (event) => {
+                if (event.key === "Enter") {
+                    processCommand(input.value.trim());
+                }
+            });
+
+            inputLine.appendChild(prefix);
+            inputLine.appendChild(input);
+            terminal.appendChild(inputLine);
+
+            if (isFirstLine) {
+                isFirstLine = false;
+                typeOutText(prefix, "guest@localhost$>", 30, () => input.focus());
+            } else {
+                prefix.textContent = "guest@localhost$>";
+                input.focus();
+            }
+
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function processCommand(command) {
+            if (command.toLowerCase() === "clear") {
+                initializeTerminal();
+            } else if (command.toLowerCase() === "help") {
+                displayHelpLinks();
+            } else if (command) {
+                displayOutput(command);
+            }
+        }
+
+        // Display a list of helpful links or actions in the terminal
+        function displayHelpLinks() {
+            const links = [
+                { text: "What Is This?", action: displayWhatThisIs },
+                { text: "About Me", href: "aboutme.html" },
+                { text: "GitHub", href: "https://github.com/ArmanG16" },
+                { text: "LinkedIn", href: "https://linkedin.com/in/arman-gevorgyan16/" },
+                { text: "Instagram", href: "instagram.html" },
+                { text: "My YouTube Channel", href: "https://www.youtube.com/channel/UCuDEUteR6YZ7qaPQy4yEl5w" },
+                { text: "Portfolio", href: "portfolio.html" },
+                { text: "Easter Eggs", action: displayEasterEggs }
+            ];
+
+            const fragment = document.createDocumentFragment();
+            links.forEach(link => {
+                const linkElement = document.createElement("a");
+                linkElement.href = link.href || "#";
+                linkElement.textContent = link.text;
+                linkElement.classList.add("help-link");
+                if (link.action) {
+                    linkElement.addEventListener("click", (event) => {
+                        event.preventDefault();
+                        link.action(); // Trigger action if defined
+                    });
+                } else {
+                    linkElement.target = "_blank";
+                }
+                fragment.appendChild(linkElement);
+            });
+
+            terminal.appendChild(fragment);
+            addInputLine();
+        }
+
+        function displayEasterEggs() {
+            const easterEggs = `
+                Easter Eggs Revealed: 
+                - The 051604 for the version is actually my birth date! May 16, 2004
+                - The keyboard on the top right is a form of ASCII art that I designed and it has a little phrase in it. Do you see it? THIS IS COOL!
+            `;
+            const lines = easterEggs.trim().split("\n");
+
+            let delay = 0;
+            lines.forEach(line => {
+                const outputLine = document.createElement("p");
+                outputLine.classList.add("repeated-command");
+                terminal.appendChild(outputLine);
+                setTimeout(() => {
+                    typeOutText(outputLine, line.trim(), 20, null);
+                }, delay);
+                delay += line.length * 20 + 300; // Reduced delay between lines
+            });
+
+            setTimeout(addInputLine, delay); // Add input line after all lines are typed
+        }
+        
+        function displayWhatThisIs() {
+            const WhatThisIs = `
+                "This" is a custom terminal website that I created using Rust, HTML, JavaScript, and CSS. I designed this as 
+                a way to showcase who I am, what skills I possess in the realm of Software Development and Computer Science, 
+                as well as develop this website in a scalable sense as I further my career (to clarify, I will be continuosly
+                updating this website, whether it is to optimize some piece of code I have written, or to add more of my projects,
+                or to simply develop the aesthetics of the site in a way that I like).
+
+                
+                I wanted to make this website my own, whether I was dealing with the color aesthetics of the page, the ASCII art, 
+                or even just displaying as much as I could about myself. Every single part of this website was developed from 
+                scratch, and resembles that of the command prompt, windows powershell, or simply the terminal that we have on our 
+                computers. As I indicated before, all the source code can be found on my project's GitHub repository. Feel free to 
+                click GitHub if you are interested. 
+                TYPE CLEAR TO RESET THE TERMINAL!
+
+                Thank you for taking a look at this website!  
+            `;
+            const lines = WhatThisIs.trim().split("\n");
+
+            let delay = 0;
+            lines.forEach(line => {
+                const outputLine = document.createElement("p");
+                outputLine.classList.add("repeated-command");
+                terminal.appendChild(outputLine);
+                setTimeout(() => {
+                    typeOutText(outputLine, line.trim(), 20, null);
+                }, delay);
+                delay += line.length * 20 + 200; 
+            });
+
+            setTimeout(addInputLine, delay); 
+        }
+
+        function displayOutput(command) {
+            const outputLine = document.createElement("p");
+            outputLine.classList.add("repeated-command");
+            outputLine.textContent = command;
+
+            terminal.appendChild(outputLine);
+            addInputLine();
+        }
+
+        initializeTerminal();
+    </script>
+</body>
+</html>

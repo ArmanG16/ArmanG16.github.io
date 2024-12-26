@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram</title>
+    <style>
+        /* Custom font to give it that retro "cool coder" look */
+        @font-face {
+            font-family: 'PressStart2P';
+            src: url('https://fonts.cdnfonts.com/s/14027/PressStart2P-Regular.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        /* Set up the base styling for the page */
+        html, body {
+            background-color: #2e0329; /* Dramatic dark red background for style points */
+            color: #f8e8c1; /* Nice light yellow to contrast */
+            font-family: 'PressStart2P', monospace; /* For that retro gaming feel */
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Keep everything nice and centered */
+        }
+
+        /* Header styling for that bold title */
+        .header {
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* The massive Instagram title font */
+        .title {
+            font-size: 5rem; /* Big enough to catch everyone’s attention */
+            text-shadow: 3px 3px 0px #000, 6px 6px 0px #810f2b, 9px 9px 0px #420d1e; /* Because why not? */
+        }
+
+        /* Photo grid container */
+        .photos {
+            display: flex;
+            flex-wrap: wrap; /* Wrap photos if there’s not enough space */
+            justify-content: center; /* Center the photos for symmetry */
+            gap: 35px;
+            margin: 20px;
+        }
+
+        /* Each photo and its description */
+        .photo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 450px; /* Uniform sizing for all photos */
+        }
+
+        /* Images with hover effects for interactivity */
+        .photo-container img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1 / 1; /* Maintain square aspect ratio */
+            object-fit: cover; /* Make sure they don’t get stretched */
+            border: 5px solid #810f2b; /* Classic frame-like border */
+            border-radius: 10px; /* Smooth rounded corners */
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5); /* Subtle shadow for a floating effect */
+            transition: transform 0.15s ease, box-shadow 0.15s ease; /* Smooth animations */
+            cursor: pointer; /* Make it obvious you can click it */
+        }
+
+        /* Make the images pop on hover */
+        .photo-container img:hover {
+            transform: scale(1.05); /* Slight zoom-in effect */
+            box-shadow: 8px 8px 18px rgba(0, 0, 0, 0.8); /* Stronger shadow */
+        }
+
+        /* Description text under each photo */
+        .photo-description {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            text-align: center;
+            color: #f8e8c1; /* Same color as body text */
+        }
+
+        /* Hyperlink styling for Instagram handles */
+        .highlight-instagram {
+            display: block; /* Forces the handle onto its own line */
+            margin-top: 5px;
+            font-size: 1rem;
+            color: #00bfff; /* Bright blue because it’s clickable */
+            font-weight: bold;
+            text-decoration: none; /* Remove underline */
+        }
+
+        /* Add underline when hovered for clarity */
+        .highlight-instagram:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal (popup) styling */
+        .modal {
+            display: none; /* Hidden until triggered */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Dimmed background */
+            z-index: 1000; /* High z-index so it’s on top of everything */
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Modal image with smooth borders */
+        .modal img {
+            max-width: 90%; /* Make sure it’s not too big */
+            max-height: 90%; /* And not too tall */
+            border: 5px solid #810f2b;
+            border-radius: 10px;
+            box-shadow: 8px 8px 18px rgba(0, 0, 0, 0.8); /* Give it a floating effect */
+        }
+
+        /* Close button for the modal */
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem; /* Big enough to notice */
+            color: #f8e8c1;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        /* Make the close button flash red on hover */
+        .modal-close:hover {
+            color: #ff4d4d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header section with the big Instagram title -->
+    <div class="header">
+        <div class="title">Instagram</div>
+    </div>
+
+    <!-- Photo grid containing Instagram profile links -->
+    <div class="photos">
+        <div class="photo-container">
+            <img src="images/Instagram1.png" alt="Instagram 1" onclick="openModal(this)">
+            <div class="photo-description">
+                This is my main Instagram profile.
+                <a href="https://www.instagram.com/armang123g/" target="_blank" rel="noopener noreferrer" class="highlight-instagram">
+                    @armang123g
+                </a>
+            </div>
+        </div>
+        <div class="photo-container">
+            <img src="images/Instagram2.png" alt="Instagram 2" onclick="openModal(this)">
+            <div class="photo-description">
+                This is my secondary Instagram profile that I use to document my lifting progress.
+                <a href="https://www.instagram.com/armanglifts/" target="_blank" rel="noopener noreferrer" class="highlight-instagram">
+                    @armanglifts
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for displaying larger versions of the images -->
+    <div class="modal" id="imageModal">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <img id="modalImage" src="" alt="Modal Image">
+    </div>
+
+    <script>
+        // Function to open the modal with the clicked image
+        function openModal(imgElement) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = imgElement.src; // Set the modal image source to the clicked image
+            modal.style.display = 'flex'; // Display the modal
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = 'none'; // Hide the modal
+        }
+    </script>
+</body>
+</html>
