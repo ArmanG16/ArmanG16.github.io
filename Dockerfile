@@ -1,37 +1,36 @@
-# Stage 1: Build the Rust application
-FROM rust:1.73 as builder
+# Stage 1: Build the Actix Web app
+FROM rust:1.71 as builder
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy the Cargo.toml and Cargo.lock first to cache dependencies
+# Copy Cargo.toml and Cargo.lock first (to leverage Docker caching)
 COPY Cargo.toml Cargo.lock ./
 
-# Create an empty directory to simulate the source for caching dependencies
-RUN mkdir src
-RUN echo "fn main() { println!(\"placeholder\"); }" > src/main.rs
+# Create a dummy main.rs to prefetch dependencies
+RUN mkdir src && echo "fn main() {}" > src/main.rs
 
-# Pre-build the dependencies
+# Fetch dependencies (cached if Cargo.toml hasn't changed)
 RUN cargo build --release || true
 
-# Now copy the actual source code and build
+# Copy the actual source code into the image
 COPY . .
+
+# Build the real application
 RUN cargo build --release
 
-# Stage 2: Create a minimal runtime environment
+# Stage 2: Create a minimal runtime image
 FROM debian:buster-slim
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy the compiled binary from the builder stage
-COPY --from=builder /app/target/release/ArmanWebsite /app/
+# Copy the compiled binary and static files from the builder
+COPY --from=builder /app/target/release/armanwebsite /app
+COPY --from=builder /app/static /app/static
 
-# Copy static files for your application
-COPY static /app/static
-
-# Expose the port your Actix application uses
+# Expose the port your app listens on
 EXPOSE 8080
 
-# Set the default command to run the application
-CMD ["/app/ArmanWebsite"]
+# Run the application
+CMD ["/app/armanwebsite"]
