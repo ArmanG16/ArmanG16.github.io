@@ -1,0 +1,27 @@
+app = "armanwebsite"
+
+kill_signal = "SIGINT"
+kill_timeout = 5
+
+[env]
+  RUST_LOG = "info"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+
+[http_service.concurrency]
+  soft_limit = 25
+  hard_limit = 50
+
+[checks]
+  [checks.http]
+  grace_period = "10s"  # Wait 10 seconds after starting before running health checks
+  interval = "15s"      # Run health checks every 15 seconds
+  timeout = "2s"        # Mark the check as failed if no response in 2 seconds
+  method = "get"        # HTTP GET request for the check
+  path = "/"            # Health check on the root path of your app
+  type = "http"         # Specifies the check type as HTTP
