@@ -1,4 +1,4 @@
-# Custom Terminal Website 🌐💻
+# Custom Terminal Website (armanwebsite.onrender.com)🌐💻
 
 Welcome to my **Custom Terminal Website**! This project is my unique take on a personal portfolio, designed to resemble the aesthetics and functionality of a terminal (like Command Prompt, PowerShell, or any Linux terminal). It's built entirely from scratch using **Rust**, **HTML**, **JavaScript**, and **CSS**.
 
