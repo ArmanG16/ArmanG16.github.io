@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>Arman's Custom Web</title>
     <style>
         @font-face {
@@ -15,7 +17,7 @@
             overflow-y: scroll; 
         }
         html, body {
-            background-color: #2e0329;
+            background-color: #000000;
             color: #f8e8c1;
             font-family: 'PressStart2P', monospace;
             margin: 0;
@@ -28,7 +30,7 @@
             flex: 1;
             padding: 20px;
             overflow-y: auto;
-            background-color: #2e0329;
+            background-color: #000000;
             position: relative;
         }
         .header {
@@ -88,7 +90,7 @@
         }
         .input-field {
             flex: 1;
-            background-color: #2e0329;
+            background-color: #000000;
             color: #f8e8c1;
             border: none;
             outline: none;
@@ -113,6 +115,15 @@
         .help-link:hover {
             color: #ffc0cb;
             text-decoration: underline;
+        }
+        .help-link i {
+            font-size: 1.2rem;
+            color: #ff9eb3;
+            transition: color 0.3s ease;
+        }
+
+        .help-link:hover i {
+            color: #ffc0cb;
         }
     </style>
 </head>
@@ -221,39 +232,57 @@
             }
         }
 
-        // Display a list of helpful links or actions in the terminal
-        function displayHelpLinks() {
+            function displayHelpLinks() {
             const links = [
-                { text: "What Is This?", action: displayWhatThisIs },
-                { text: "About Me", href: "aboutme.html" },
-                { text: "GitHub", href: "https://github.com/ArmanG16" },
-                { text: "LinkedIn", href: "https://linkedin.com/in/arman-gevorgyan16/" },
-                { text: "Instagram", href: "instagram.html" },
-                { text: "My YouTube Channel", href: "https://www.youtube.com/channel/UCuDEUteR6YZ7qaPQy4yEl5w" },
-                { text: "Portfolio", href: "portfolio.html" },
-                { text: "Easter Eggs", action: displayEasterEggs }
+                { text: "What Is This?", action: displayWhatThisIs, icon: "fas fa-question-circle" },
+                { text: "About Me", href: "aboutme.html", icon: "fas fa-user" },
+                { text: "GitHub", href: "https://github.com/ArmanG16", icon: "fab fa-github" },
+                { text: "LinkedIn", href: "https://linkedin.com/in/arman-gevorgyan16/", icon: "fab fa-linkedin" },
+                { text: "Instagram", href: "instagram.html", icon: "fab fa-instagram" },
+                { text: "My YouTube Channel", href: "https://www.youtube.com/channel/UCuDEUteR6YZ7qaPQy4yEl5w", icon: "fab fa-youtube" },
+                { text: "Portfolio", href: "portfolio.html", icon: "fas fa-briefcase" },
+                { text: "Easter Eggs", action: displayEasterEggs, icon: "fas fa-egg" }
             ];
 
             const fragment = document.createDocumentFragment();
             links.forEach(link => {
                 const linkElement = document.createElement("a");
                 linkElement.href = link.href || "#";
-                linkElement.textContent = link.text;
                 linkElement.classList.add("help-link");
+
+                // Open external links in a new tab, but internal links in the same tab
+                if (["https://github.com/ArmanG16", "https://linkedin.com/in/arman-gevorgyan16/", "https://www.youtube.com/channel/UCuDEUteR6YZ7qaPQy4yEl5w"].includes(link.href)) {
+                    linkElement.target = "_blank"; // Open external links in a new tab
+                }
+
+                // Create an <i> element for the icon
+                const iconElement = document.createElement("i");
+                iconElement.className = link.icon; // Add Font Awesome classes
+                iconElement.style.marginRight = "10px"; // Add spacing between icon and text
+
+                // Create the text node for the link text
+                const textNode = document.createTextNode(link.text);
+
+                // Append the icon and text to the link element
+                linkElement.appendChild(iconElement);
+                linkElement.appendChild(textNode);
+
+                // Attach the action if defined
                 if (link.action) {
                     linkElement.addEventListener("click", (event) => {
                         event.preventDefault();
                         link.action(); // Trigger action if defined
                     });
-                } else {
-                    linkElement.target = "_blank";
                 }
+
                 fragment.appendChild(linkElement);
             });
 
             terminal.appendChild(fragment);
             addInputLine();
         }
+
+
 
         function displayEasterEggs() {
             const easterEggs = `
