@@ -215,6 +215,21 @@
             opacity: 1;
             transform: scale(1.1);
         }
+        .video-preview {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border: 5px solid #810f2b;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            cursor: pointer;
+        }
+
+        .video-preview:hover {
+            transform: scale(1.05);
+            box-shadow: 8px 8px 18px rgba(0, 0, 0, 0.8);
+        }
     </style>
 </head>
 <body>
@@ -331,10 +346,46 @@
                 <img src="images/palindromecheck.png" alt="Palindrome Check" onclick="openModal(this)">
             </div>
         </div>
-        <div class="subheader">Project 3 (IN THE WORKS)</div>
+        <div class="subheader">Project 3</div>
+        <p>
+            I created a prototype for an optimized lifting app based on user needs, UX design laws, A/B testing, interviews, and interface principles. 
+            The app is called OPTI!
+            <br><a class="download-link" href="OPTIPresentation_Arman.pptx" download="OPTIApp_ArmanG_Presentation.pptx">
+                My PowerPoint Presentation!
+            </a>
+        </p>
+        <p>
+            The OPTI app is a user-focused fitness application designed to deliver a minimalist, intuitive, and engaging experience while simultaneously optimizing a users strength, aesthetics, or cardio goals. Through the application of UX Design 
+            Laws such as Fitts' Law and Jacob’s Law, changes were made to improve usability, including enlarging buttons for accessibility and relocating key elements for 
+            quicker interaction. A/B testing revealed that users preferred a design with larger, better-placed buttons and integrated progress tracking, which enhanced 
+            motivation and reduced time-to-action. Interviews with users highlighted the need for personalized, real-time feedback and adaptive workout recommendations, 
+            which were incorporated into the app’s design. This iterative process taught the importance of aligning functionality with user expectations and accessibility 
+            needs. Ultimately, OPTI empowers users by providing pre- and post-workout feedback, real-time tracking, and live challenges to optimize fitness performance 
+            while fostering engagement and community.        
+        </p>
+        <div class="photos">
+            <div class="photo-container">
+                <div class="photo-title2">OPTI Prototype</div>
+                <video class="video-preview" controls onclick="openVideoModal(this)">
+                    <source src="videos/OPTIApp.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>            
+            <div class="photo-container">
+                <div class="photo-title2">Problem and Solution</div>
+                <img src="images/OptiPS.png" alt="Problem Solution" onclick="openModal(this)">
+            </div>
+            <div class="photo-container">
+                <div class="photo-title2">UX Design Principles</div>
+                <img src="images/OptiUXDesign.png" alt="UX Design" onclick="openModal(this)">
+            </div>
+            <div class="photo-container">
+                <div class="photo-title2">OPTI Heuristics</div>
+                <img src="images/OptiHeuristic.png" alt="OPTI Heuristics" onclick="openModal(this)">
+            </div>
+        </div>
     </div>
-
-    <!-- Modal -->
+    
     <div class="modal" id="imageModal">
         <button class="modal-close" onclick="closeModal()">&times;</button>
         <img id="modalImage" src="" alt="Modal Image">
@@ -348,6 +399,33 @@
         }
         function closeModal() {
             const modal = document.getElementById('imageModal');
+            modal.style.display = 'none';
+        }
+        function openVideoModal(videoElement) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modalImage.style.display = 'none'; // Hide the image element
+            const videoModal = document.createElement('video');
+            videoModal.id = 'modalVideo';
+            videoModal.controls = true;
+            videoModal.src = videoElement.querySelector('source').src;
+            videoModal.style.maxWidth = '90%';
+            videoModal.style.maxHeight = '90%';
+            videoModal.style.border = '5px solid #810f2b';
+            videoModal.style.borderRadius = '10px';
+            videoModal.style.boxShadow = '8px 8px 18px rgba(0, 0, 0, 0.8)';
+            modal.appendChild(videoModal);
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            const modalVideo = document.getElementById('modalVideo');
+            if (modalVideo) {
+                modalVideo.remove();
+            }
+            const modalImage = document.getElementById('modalImage');
+            modalImage.style.display = ''; // Show the image element again
             modal.style.display = 'none';
         }
     </script>
