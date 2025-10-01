@@ -3,7 +3,7 @@ services:
     name: arman-terminal
     env: rust
     buildCommand: "cargo build --release"
-    startCommand: "./target/release/armanwebsite"
+    startCommand: "bash -lc 'cargo build --release && ./target/release/$(basename $(cargo metadata --no-deps --format-version 1 | jq -r .packages[0].name))'"
     envVars:
       - key: PORT
         value: 8080
