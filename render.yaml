@@ -1,11 +1,13 @@
 services:
   - type: web
-    name: arman-terminal
+    name: armanwebsite
     env: rust
-    buildCommand: "cargo build --release"
-    startCommand: "bash -lc 'cargo build --release && ./target/release/$(basename $(cargo metadata --no-deps --format-version 1 | jq -r .packages[0].name))'"
-    envVars:
-      - key: PORT
-        value: 8080
-    healthCheckPath: "/"
     plan: free
+    branch: main
+    region: oregon
+    buildCommand: cargo build --release
+    startCommand: ./target/release/armanwebsite
+    autoDeploy: true
+    envVars:
+      - key: RUST_LOG
+        value: info
